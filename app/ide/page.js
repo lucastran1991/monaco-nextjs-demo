@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import dynamic from 'next/dynamic';
-import { loader } from '@monaco-editor/react';
-// import { text } from "stream/consumers";
+import { loader, useMonaco } from '@monaco-editor/react';
+import "monaco-themes/themes/GitHub Dark.json";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
@@ -100,6 +100,9 @@ export default function IDE() {
           'editor.background': '#f3f4f6', // This is a light gray color (Tailwind's gray-100)
         }
       });
+      import('monaco-themes/themes/GitHub Dark.json')
+        .then(data => { monaco.editor.defineTheme('monokai', data); })
+        .then(_ => monaco.editor.setTheme('monokai'))
     });
   }, []);
 
@@ -244,7 +247,7 @@ export default function IDE() {
   };
 
   return (
-    <div className="flex justify-center items-start h-screen">
+    <div className="flex justify-center items-start h-screen bg-gray-100">
       <div className="w-full h-full p-5 flex flex-col">
         <div className="mb-4 flex items-center space-x-2">
           <select
@@ -290,7 +293,7 @@ export default function IDE() {
           />
           <button
             onClick={handleConnect}
-            className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${isConnected ? "bg-green-600 hover:bg-green-700" : "bg-indigo-600 hover:bg-indigo-700"
+            className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${isConnected ? "bg-red-600 hover:bg-red-700" : "bg-indigo-600 hover:bg-indigo-700"
               }`}
           >
             {isConnected ? "Disconnect" : "Connect"}
@@ -298,50 +301,52 @@ export default function IDE() {
           {isConnected && (
             <button
               onClick={handleSetOrg}
-              className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 bg-purple-600 hover:bg-purple-700`}
+              className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 bg-indigo-600 hover:bg-indigo-700`}
             >
               SetOrg
             </button>
           )}
         </div>
 
-        <div className="w-full flex-grow flex flex-col bg-gray-100">
-          <form onSubmit={handleSubmit} className="flex flex-col h-full pt-5">
+        <div className="w-full flex-grow flex flex-col bg-gray-800 rounded-md">
+          <form onSubmit={handleSubmit} className="flex flex-col h-full pt-5 pb-5">
             <div className="flex-grow overflow-hidden">
               <label htmlFor="comment" className="sr-only">
                 Add your code
               </label>
               <Editor
                 height="100%"
-                defaultLanguage="ruby"
+                defaultLanguage="python"
                 defaultValue='#'
-                theme="dimTheme"
+                theme="monokai"
                 options={{
                   tabSize: 2,
                   insertSpaces: true,
-                  wordWrap: 'off'
+                  wordWrap: 'on'
                 }}
                 onMount={handleEditorDidMount}
               />
             </div>
-            <div className="flex justify-between">
-              <div className="border overflow-y-auto max-h-20">
-                <ul className="list-disc">
-                  {[...sentMessages].reverse().map((message, index) => (
-                    <li key={index} className="text-sm text-gray-700">{message}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="p-5">
-                <button
-                  type="submit"
-                  className={`inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-white ${isConnected ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-400 cursor-not-allowed'
-                    }`}
-                  disabled={!isConnected}
-                >SEND  ►</button>
-              </div>
-            </div>
           </form>
+        </div>
+        <div className="pt-5 pb-5 flex justify-between">
+          <div className="overflow-y-auto max-h-20">
+            <ul className="list-disc">
+              {[...sentMessages].reverse().map((message, index) => (
+                <li key={index} className="text-sm text-gray-700">{message}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className={`inline-flex items-center rounded-md px-5 py-5 text-md font-semibold text-white ${isConnected ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-400 cursor-not-allowed'
+                }`}
+              disabled={!isConnected}
+            >
+              SEND
+            </button>
+          </div>
         </div>
       </div>
     </div>
