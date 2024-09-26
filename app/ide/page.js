@@ -20,7 +20,7 @@ export default function IDE() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedHost, setSelectedHost] = useState("");
-  const [msgLog, setMsgLog] = useState("");
+  const [msgLog, setMsgLog] = useState([]);
   const [sentMessages, setSentMessages] = useState([]);
 
   const handleConnect = () => {
@@ -52,6 +52,7 @@ export default function IDE() {
           console.log("Received message:", event.data);
           try {
             const parsedData = JSON.parse(event.data);
+            setMsgLog(parsedData);
             console.log("Parsed message:", parsedData);
           } catch (error) {
             console.error("Failed to parse message:", error);
@@ -317,7 +318,13 @@ export default function IDE() {
               <Editor
                 height="100%"
                 defaultLanguage="python"
-                defaultValue='#'
+                defaultValue={`#
+$$.Message.Type: json
+Find:
+  limit: 1
+  Project:
+    id:
+      NE: ''`}
                 theme="monokai"
                 options={{
                   tabSize: 2,
@@ -327,25 +334,31 @@ export default function IDE() {
                 onMount={handleEditorDidMount}
               />
             </div>
+            <div className="flex justify-between">
+              {/* <div className="overflow-y-auto max-h-20 pt-5 pl-5">
+                <ul className="list-disc">
+                  {[...sentMessages].reverse().map((message, index) => (
+                    <li key={index} className="text-sm text-gray-700">{message}</li>
+                  ))}
+                </ul>
+              </div> */}
+              <button
+                type="submit"
+                className={`inline-flex items-center rounded-md px-5 py-5 text-md font-semibold text-white ${isConnected ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-400 cursor-not-allowed'
+                  }`}
+                disabled={!isConnected}
+              >Send</button>
+            </div>
           </form>
         </div>
-        <div className="pt-5 pb-5 flex justify-between">
+        <div className="pt-5 pb-5 flex">
           <div className="overflow-y-auto max-h-20">
-            <ul className="list-disc">
-              {[...sentMessages].reverse().map((message, index) => (
-                <li key={index} className="text-sm text-gray-700">{message}</li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className={`inline-flex items-center rounded-md px-5 py-5 text-md font-semibold text-white ${isConnected ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-400 cursor-not-allowed'
-                }`}
-              disabled={!isConnected}
-            >
-              SEND
-            </button>
+            {msgLog.map(item => (
+              <div key={item.id}>
+                <h2>{item.title}</h2>
+                <p>{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
