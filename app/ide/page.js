@@ -11,7 +11,7 @@ export default function IDE() {
   const [connectionString, setConnectionString] = useState("");
   const [host, setHost] = useState("ws://veoliaint.atomiton.com:8989");
   const [orgID, setOrgID] = useState("S4KYOK7PYZ6UE3VBMU42BFHTZIDHQF5M3");
-  const [uFID, setUFID] = useState("fqm2ib3g4ubgsupdu2iycpb2dj3ant5fq");
+  const [uFID, setUFID] = useState("fw3dyvrnofcpcr5iojuhhobzrsnwi76id");
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef(null);
   const editorRef = useRef(null);
@@ -334,33 +334,34 @@ Find:
                 onMount={handleEditorDidMount}
               />
             </div>
-            <div className="flex justify-between">
-              {/* <div className="overflow-y-auto max-h-20 pt-5 pl-5">
-                <ul className="list-disc">
-                  {[...sentMessages].reverse().map((message, index) => (
-                    <li key={index} className="text-sm text-gray-700">{message}</li>
-                  ))}
-                </ul>
-              </div> */}
-              <button
-                type="submit"
-                className={`inline-flex items-center rounded-md px-5 py-5 text-md font-semibold text-white ${isConnected ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-400 cursor-not-allowed'
-                  }`}
-                disabled={!isConnected}
-              >Send</button>
+            <div className="flex justify-between p-5">
+              <div className="overflow-y-auto max-h-20">
+                <p className="text-sm text-white">
+                  {JSON.stringify(msgLog, null, 2)}
+                  </p>
+              </div>
+              <div className="pl-5">
+                <button
+                  type="submit"
+                  className={`inline-flex items-center rounded-md px-5 py-5 text-md font-semibold text-white ${isConnected ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-400 cursor-not-allowed'
+                    }`}
+                  disabled={!isConnected}
+                >Send</button>
+              </div>
             </div>
           </form>
         </div>
-        <div className="pt-5 pb-5 flex">
+        {/* <div className="pt-5 pb-5 flex">
           <div className="overflow-y-auto max-h-20">
-            {msgLog.map(item => (
-              <div key={item.id}>
-                <h2>{item.title}</h2>
-                <p>{item.description}</p>
-              </div>
-            ))}
+            <div className="overflow-y-auto max-h-20 pt-5 pl-5">
+              <ul className="list-disc">
+                {[...sentMessages].reverse().map((message, index) => (
+                  <li key={index} className="text-sm text-gray-700">{message}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
