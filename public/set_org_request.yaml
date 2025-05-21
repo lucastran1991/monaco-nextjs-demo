@@ -1,0 +1,55 @@
+#
+var $mode = 'Veolia' 
+# HWF / Veolia / Miche / Vitual
+# 
+var $BASE_VALUE:
+  HWF:
+    orgId: 'S4KYOK7PYZ6UE3VBMU42BFHTZIDHQF5M3'
+    enterpriseId: 'SLNSTXYEDPQ7B6TYYF7TFNRVBC2UAYJ4J'
+    plantId: 'SLJT5CQQKQQARRKMVN6AEIM4EOCMNDCBI'
+    plantName: 'HWF Full Demo'
+
+  Veolia:
+    orgId: 'SYMDKFIM4KQLXSK6UYJZ4AE7PQQET35E2'
+    enterpriseId: 'SNYGRUOXEROKAWX63HPMQC6ER3QWBPS4Z'
+    plantId: 'SYHI5OY7RAIGBBYOYVQOCOC7JMCNC4RPP' # SYHI5OY7RAIGBBYOYVQOCOC7JMCNC4RPP / S73PY4ENJICPNFG5ROHYCVIF6BS3NAZE4
+    plantName: 'Chalon (automatic data)' # Chalon (automatic data) / Veolia Hoskote Plant
+
+  Miche:
+    orgId: 'SN33QCCTDWRAM4ZTBG5AWSPNHKXF4DQG6'
+    enterpriseId: 'SNAYCEV5IKEMOZJ2Q73OBPFHVMGC2C3XA'
+    plantId: 'SMB5FOEM4E5X6EZSJFAUMMHL6UWK6SNKF'
+    plantName: "US-7"
+
+  Vitual:
+    orgId: 'SAIDTFZEHRFDCNJY4YDUCZES7T2XSRSF6'
+    enterpriseId: 'S3JCWULWUGIMZN3LYHMLINRGWKXYSULAZ'
+    plantId: 'SZY2VZWCHEGKQGWVTLX5MSURU7KJALMTZ'
+    plantName: "CBRE, MSD, Carlow, Ireland"
+
+$$.mlresult.AFI = valueof $F.AFI-LOCAL
+$args.mid = 'm1'
+$args.id = GetOrgs($args).Orgs.getFirst().id
+$args.timeZone = 'Asia/Saigon'
+$args.userId = 'SPSEUHF4M3BYKKYLZYCECSDWL2ZGRFRZ5'
+SetOrg($args)
+$$.mlresult.remove('SetOrg')
+$$.mlresult.remove('GetOrgs')
+
+$args.clearImp()
+$args.mid = 'm1'
+$args.enterpriseId = $BASE_VALUE.($mode).enterpriseId
+
+$args.orgId = $BASE_VALUE.($mode).orgId
+SetSelectedEnterprise($args)
+$$.mlresult.remove('SetSelectedEnterprise')
+
+$args.clearImp()
+$args.mid = 'm1'
+$args.plantId = $BASE_VALUE.($mode).plantId
+$args.plantName = $BASE_VALUE.($mode).plantName
+$args.enterpriseId = $BASE_VALUE.($mode).enterpriseId
+SetPlantData($args)
+$$.mlresult.remove('SetPlantData')
+
+$$.mlresult.Status = 'Success'

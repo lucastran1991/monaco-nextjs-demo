@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST="{\"app/ide/page.js -> @monaco-editor/react\":{\"id\":\"app/ide/page.js -> @monaco-editor/react\",\"files\":[]}}"
